@@ -1,0 +1,2 @@
+/dev/video0 person
+../resources/bus_station_6094_960x540.mp4 person

@@ -1,0 +1,7 @@
+有趣的模型演示:
+环境：ubuntu16.04+openVINO(R4)
+cd /home/xs/inference_engine_samples/intel64/Release
+人体姿态估计：
+./human_pose_estimation_demo -i cam -m /opt/intel/computer_vision_sdk/deployment_tools/intel_models/human-pose-estimation-0001/FP32/human-pose-estimation-0001.xml -d CPU
+车牌，车型检测
+./security_barrier_camera_demo -i cam -m /opt/intel/computer_vision_sdk/deployment_tools/intel_models/vehicle-license-plate-detection-barrier-0106/FP32/vehicle-license-plate-detection-barrier-0106.xml -m_va /opt/intel/computer_vision_sdk/deployment_tools/intel_models/vehicle-attributes-recognition-barrier-0039/FP32/vehicle-attributes-recognition-barrier-0039.xml -m_lpr /opt/intel/computer_vision_sdk/deployment_tools/intel_models/license-plate-recognition-barrier-0001/FP32/license-plate-recognition-barrier-0001.xml -d CPU
