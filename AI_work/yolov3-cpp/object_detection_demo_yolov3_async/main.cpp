@@ -43,6 +43,10 @@
 #include <ext_list.hpp>
 
 #include <opencv2/opencv.hpp>
+#include <opencv2/opencv.hpp>
+#include <opencv2/video/tracking.hpp>
+#include <opencv2/pvl/pvl.hpp>
+
 
 // MQTT
 #include "mqtt.h"
@@ -61,7 +65,7 @@
 #include <sys/stat.h>
 #include <time.h>
 
-
+using namespace cv;
 using namespace std;
 using namespace InferenceEngine;
 
@@ -124,6 +128,7 @@ int handleControlMessages(void *context, char *topicName, int topicLen, MQTTClie
     }
     return 1;
 }
+
 
 void FrameToBlob(const cv::Mat &frame, InferRequest::Ptr &inferRequest, const std::string &inputName) {
     if (FLAGS_auto_resize) {
@@ -263,7 +268,7 @@ int main(int argc, char *argv[]) {
 
         slog::info << "Reading input" << slog::endl;
         cv::VideoCapture cap;
-        if (!((FLAGS_i == "cam") ? cap.open(0) : cap.open(FLAGS_i.c_str()))) {
+        if (!((FLAGS_i == "cam") ? cap.open(1) : cap.open(FLAGS_i.c_str()))) {
             throw std::logic_error("Cannot open input file or camera: " + FLAGS_i);
         }
 
@@ -498,8 +503,19 @@ int main(int argc, char *argv[]) {
                     }
                 }
             }
-            cv::imshow("Detection results", frame);
-
+            //cv::imshow("Detection results", frame);
+            // 将BGR24原始格式输出到控制台.
+            int i,j;
+            unsigned char b, g, r;
+            Vec3b pixel;
+            for(int j = 0;j < frame.rows;j++){
+              for(int i = 0;i < frame.cols;i++){
+                  pixel = frame.at<Vec3b>(j, i);
+                 printf("%c%c%c", pixel[0], pixel[1], pixel[2]);
+              }
+            }
+            fflush(stdout);
+            //
             t1 = std::chrono::high_resolution_clock::now();
             ocv_render_time = std::chrono::duration_cast<ms>(t1 - t0).count();
 
