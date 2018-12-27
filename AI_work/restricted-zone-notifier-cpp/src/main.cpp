@@ -43,6 +43,14 @@
 // MQTT
 #include "mqtt.h"
 
+#include <fstream>
+#include <stdlib.h>
+#include <string>
+#include <vector>
+#include "opencv2/opencv.hpp"
+#include "time.h"
+#include "CvxText.h"
+
 using namespace std;
 using namespace cv;
 using namespace dnn;
@@ -117,7 +125,39 @@ const char* keys =
     "{ width w     | 0 | Width of the assembly area in pixels. }"
     "{ height h    | 0 | Height of the assembly area in pixels. }";
 
+//中文显示
+static int ToWchar(char* &src, wchar_t* &dest, const char *locale = "zh_CN.utf8")
+{
+    if (src == NULL) {
+        dest = NULL;
+        return 0;
+    }
 
+    // 根据环境变量设置locale
+    setlocale(LC_CTYPE, locale);
+
+    // 得到转化为需要的宽字符大小
+    int w_size = mbstowcs(NULL, src, 0) + 1;
+
+    // w_size = 0 说明mbstowcs返回值为-1。即在运行过程中遇到了非法字符(很有可能使locale
+    // 没有设置正确)
+    if (w_size == 0) {
+        dest = NULL;
+        return -1;
+    }
+
+    //wcout << "w_size" << w_size << endl;
+    dest = new wchar_t[w_size];
+    if (!dest) {
+        return -1;
+    }
+
+    int ret = mbstowcs(dest, src, strlen(src)+1);
+    if (ret <= 0) {
+        return -1;
+    }
+    return 0;
+}
 // nextImageAvailable以线程安全的方式从队列返回下一个图像
 Mat nextImageAvailable() {
     Mat rtn;
@@ -408,13 +448,22 @@ int main(int argc, char** argv)
         putText(frame, label, Point(0, 15), FONT_HERSHEY_SIMPLEX, 0.5, CV_RGB(255, 255, 255));
 
         AssemblyInfo info = getCurrentInfo();
+        
         label = format("Worker Safe: %s", info.safe ? "true" : "false");
         putText(frame, label, Point(0, 40), FONT_HERSHEY_SIMPLEX, 0.5, CV_RGB(255, 255, 255));
 
         if (info.alert) {
-            string warning;
-            warning = format("HUMAN IN ASSEMBLY AREA: PAUSE THE MACHINE!");
-            putText(frame, warning, Point(0, 120), FONT_HERSHEY_SIMPLEX, 0.5, CV_RGB(255, 0, 0), 2);
+            //显示中文
+            CvxText text("../simhei.ttf"); //指定字体
+            cv::Scalar size1{ 80, 0.5, 0.1, 0 }; // (字体大小, 无效的, 字符间距, 无效的 }
+            text.setFont(nullptr, &size1, nullptr, 0);
+            char* str = (char *)"警告有人入侵";
+            wchar_t *w_str;
+            ToWchar(str,w_str);
+            text.putText(frame, w_str, cv::Point(0,120), cv::Scalar(0, 0, 255));
+            //string warning;
+           // warning = format("HUMAN IN ASSEMBLY AREA: PAUSE THE MACHINE!");
+           // putText(frame, warning, Point(0, 120), FONT_HERSHEY_SIMPLEX, 0.5, CV_RGB(255, 0, 0), 2);
         }
 
         imshow("Restricted Zone Notifier", frame);

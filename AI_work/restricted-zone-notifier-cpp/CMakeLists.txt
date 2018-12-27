@@ -29,18 +29,21 @@ if(NOT OpenCV_FOUND)
     message(FATAL_ERROR "${Red}Intel OpenVINO was not found!\n${Blue}Have you sourced the ${Green}setupvars.sh${Blue} script provided by the Intel OpenVINO?${CR}")
 endif( )
 
-include_directories(${OpenCV_INCLUDE_DIRS})
+include_directories(
+        /usr/include/freetype2/
+        ${OpenCV_INCLUDE_DIRS}
+        )
 
 # Install paho MQTT dependency
 include(pahomqtt)
 
 # Application executables
 set(MONITOR monitor)
-set(DSOURCES src/main.cpp src/mqtt.cpp)
+set(DSOURCES src/main.cpp src/mqtt.cpp  src/CvxText.cpp)
 add_executable(${MONITOR} ${DSOURCES})
 add_dependencies(${MONITOR} pahomqtt)
 set_target_properties(${MONITOR} ${TRAINER} PROPERTIES COMPILE_FLAGS "-pthread -std=c++11")
-target_link_libraries (${MONITOR} ${OpenCV_LIBS} pthread paho-mqtt3cs)
+target_link_libraries (${MONITOR} ${OpenCV_LIBS} pthread paho-mqtt3cs freetype)
 
 # Install
 install(TARGETS ${MONITOR} DESTINATION bin)
