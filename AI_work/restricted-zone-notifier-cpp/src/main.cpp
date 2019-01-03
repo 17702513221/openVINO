@@ -224,8 +224,8 @@ void savePerformanceInfo() {
     double freq = getTickFrequency() / 1000;
     double t = net.getPerfProfile(times) / freq;
 
-    string label = format("Person inference time: %.2f ms", t);
-
+    string label = format(" %.2f ms", t);
+    
     currentPerf = label;
 
     m1.unlock();
@@ -371,6 +371,11 @@ int main(int argc, char** argv)
 
     mqtt_connect();
 
+    //设置中文格式
+    CvxText text("../simhei.ttf"); //指定字体
+    cv::Scalar size1{ 40, 0.5, 0.1, 0 }; // (字体大小, 无效的, 字符间距, 无效的 }
+    text.setFont(nullptr, &size1, nullptr, 0);
+
     // 打开face model
     net = readNet(model, config);
     net.setPreferableBackend(backendId);
@@ -445,22 +450,23 @@ int main(int argc, char** argv)
         addImage(frame);
 
         string label = getCurrentPerf();
-        putText(frame, label, Point(0, 15), FONT_HERSHEY_SIMPLEX, 0.5, CV_RGB(255, 255, 255));
+        char* str = (char *)"推理时间：";
+        wchar_t *w_str;
+        ToWchar(str,w_str);
+        text.putText(frame, w_str, cv::Point(950,40), cv::Scalar(0, 0, 0));
+        putText(frame, label, Point(1100, 40), FONT_HERSHEY_SIMPLEX, 1.3, CV_RGB(0, 0, 0));
 
         AssemblyInfo info = getCurrentInfo();
-        
-        label = format("Worker Safe: %s", info.safe ? "true" : "false");
-        putText(frame, label, Point(0, 40), FONT_HERSHEY_SIMPLEX, 0.5, CV_RGB(255, 255, 255));
+                              
+        //label = format("Worker Safe: %s", info.safe ? "true" : "false");
+        //putText(frame, label, Point(0, 40), FONT_HERSHEY_SIMPLEX, 0.5, CV_RGB(255, 255, 255));
 
         if (info.alert) {
             //显示中文
-            CvxText text("../simhei.ttf"); //指定字体
-            cv::Scalar size1{ 80, 0.5, 0.1, 0 }; // (字体大小, 无效的, 字符间距, 无效的 }
-            text.setFont(nullptr, &size1, nullptr, 0);
             char* str = (char *)"警告有人入侵";
             wchar_t *w_str;
             ToWchar(str,w_str);
-            text.putText(frame, w_str, cv::Point(0,120), cv::Scalar(0, 0, 255));
+            text.putText(frame, w_str, cv::Point(0,40), cv::Scalar(0, 0, 255));
             //string warning;
            // warning = format("HUMAN IN ASSEMBLY AREA: PAUSE THE MACHINE!");
            // putText(frame, warning, Point(0, 120), FONT_HERSHEY_SIMPLEX, 0.5, CV_RGB(255, 0, 0), 2);

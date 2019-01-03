@@ -1,8 +1,6 @@
 //环境搭建ubuntu16.04+openVINO(R4)
 cd machine-operator-monitor-cpp
-mkdir -p build && cd build
-cmake ..
-make
+./build.sh
 //下载测试视频
 cd restricted-zone-notifier-cpp
 wget https://github.com/intel-iot-devkit/sample-videos/raw/master/head-pose-face-detection-female.mp4

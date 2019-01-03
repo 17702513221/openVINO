@@ -43,6 +43,14 @@
 // MQTT
 #include "mqtt.h"
 
+#include <fstream>
+#include <stdlib.h>
+#include <string>
+#include <vector>
+#include "opencv2/opencv.hpp"
+#include "time.h"
+#include "CvxText.h"
+
 using namespace std;
 using namespace cv;
 using namespace dnn;
@@ -129,7 +137,39 @@ const char* keys =
     "{ rate r      | 1 | number of seconds between data updates to MQTT server. }"
     "{ angry a     | 5 | number of seconds during which the operator has been angrily operating the machine. }";
 
+//中文显示
+static int ToWchar(char* &src, wchar_t* &dest, const char *locale = "zh_CN.utf8")
+{
+    if (src == NULL) {
+        dest = NULL;
+        return 0;
+    }
 
+    // 根据环境变量设置locale
+    setlocale(LC_CTYPE, locale);
+
+    // 得到转化为需要的宽字符大小
+    int w_size = mbstowcs(NULL, src, 0) + 1;
+
+    // w_size = 0 说明mbstowcs返回值为-1。即在运行过程中遇到了非法字符(很有可能使locale
+    // 没有设置正确)
+    if (w_size == 0) {
+        dest = NULL;
+        return -1;
+    }
+
+    //wcout << "w_size" << w_size << endl;
+    dest = new wchar_t[w_size];
+    if (!dest) {
+        return -1;
+    }
+
+    int ret = mbstowcs(dest, src, strlen(src)+1);
+    if (ret <= 0) {
+        return -1;
+    }
+    return 0;
+}
 // nextImageAvailable以线程安全的方式从队列返回下一个图像
 Mat nextImageAvailable() {
     Mat rtn;
@@ -195,8 +235,8 @@ void savePerformanceInfo() {
 
     vector<double> faceTimes, moodTimes, poseTimes;
     double freq = getTickFrequency() / 1000;
-    double t = net.getPerfProfile(faceTimes) / freq;
-    double t2, t3;
+    double t1 = net.getPerfProfile(faceTimes) / freq;
+    double t,t2, t3;
 
     if (moodChecked) {
         t2 = moodnet.getPerfProfile(moodTimes) / freq;
@@ -204,9 +244,10 @@ void savePerformanceInfo() {
 
     if (poseChecked) {
         t3 = posenet.getPerfProfile(poseTimes) / freq;
-    }
+    } 
+    t=t1+t2+t3;
 
-    string label = format("Face inference time: %.2f ms, Mood inference time: %.2f ms, Pose inference time: %.2f ms", t, t2, t3);
+    string label = format("%.2fms", t);
 
     currentPerf = label;
 
@@ -406,6 +447,11 @@ int main(int argc, char** argv)
 
     mqtt_connect();
 
+    //设置中文格式
+    CvxText text("../simhei.ttf"); //指定字体
+    cv::Scalar size1{ 20, 0.5, 0.1, 0 }; // (字体大小, 无效的, 字符间距, 无效的 }
+    text.setFont(nullptr, &size1, nullptr, 0);
+
     // 打开 face model
     net = readNet(model, config);
     net.setPreferableBackend(backendId);
@@ -457,22 +503,32 @@ int main(int argc, char** argv)
         addImage(frame);
 
         string label = getCurrentPerf();
-        putText(frame, label, Point(0, 15), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(255, 255, 255));
+        char* str1 = (char *)"推理时间：";
+        wchar_t *w_str1;
+        ToWchar(str1,w_str1);
+        text.putText(frame, w_str1, cv::Point(550,20), cv::Scalar(0, 0, 0));
+        putText(frame, label, Point(650, 20), FONT_HERSHEY_SIMPLEX, 0.7, Scalar(0, 0, 0));
 
         WorkerInfo info = getCurrentInfo();
-        label = format("Watching: %d, Angry: %d", info.watching, info.angry);
-        putText(frame, label, Point(0, 40), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(255, 255, 255));
+        char* str2 = (char *)"操作者人数：";
+        wchar_t *w_str2;
+        ToWchar(str2,w_str2);
+        text.putText(frame, w_str2, cv::Point(0,20), cv::Scalar(0, 0, 0));
+        label = format(" %d", info.watching);
+        putText(frame, label, Point(100, 20), FONT_HERSHEY_SIMPLEX, 0.7, Scalar(0, 0, 0));
 
         if (!info.watching) {
-            string warning;
-            warning = format("Operator not watching machine: PAUSE MACHINE");
-            putText(frame, warning, Point(0, 80), FONT_HERSHEY_SIMPLEX, 0.5, CV_RGB(255, 0, 0), 2);
+            char* str = (char *)"警告：没注视机器";
+            wchar_t *w_str;
+            ToWchar(str,w_str);
+            text.putText(frame, w_str, cv::Point(0,40), cv::Scalar(255, 0, 0));
         }
 
-        if (info.alert) {
-            string warning;
-            warning = format("Operator angry at the machine: PAUSE MACHINE");
-            putText(frame, warning, Point(0, 80), FONT_HERSHEY_SIMPLEX, 0.5, CV_RGB(255, 0, 0), 2);
+        if (info.angry) {
+            char* str = (char *)"警告：情绪生气";
+            wchar_t *w_str;
+            ToWchar(str,w_str);
+            text.putText(frame, w_str, cv::Point(0,60), cv::Scalar(255, 0, 0));
         }
 
         imshow("Machine Operator Monitor", frame);
