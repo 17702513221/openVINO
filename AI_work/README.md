@@ -1,9 +1,7 @@
 crossroad_camera_demo_cpp:人物风格检测
 face_access_control_cpp:面部识别
 ffmpeg:视频流传输（默认VGA格式USB摄像头）
-license_plate_recognition_cpp:车牌识别（无需openVINO）
 machine_operator_monitor_cpp:专注力检测
-mqtt_py:python版mqtt
 parking_lot_counter_cpp:车辆进出统计
 pedestrian_tracker_cpp:人员查找，视频分割
 restricted_zone_notifier_cpp:人体检测
