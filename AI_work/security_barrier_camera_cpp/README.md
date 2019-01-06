@@ -1,6 +1,8 @@
 //环境搭建ubuntu16.04+openVINO(R5)
 cd parking-lot-counter-cpp
 ./build.sh
+//默认使用
+./start.sh
 //使用摄像头，MQTT
 export MQTT_SERVER=localhost:1883
 export MQTT_CLIENT_ID=cvservice

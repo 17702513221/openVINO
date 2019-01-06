@@ -3,12 +3,8 @@
 cd /home/xs/inference_engine_samples/intel64/Release
 人体姿态估计：
 ./human_pose_estimation_demo -i cam -m /opt/intel/computer_vision_sdk/deployment_tools/intel_models/human-pose-estimation-0001/FP32/human-pose-estimation-0001.xml -d CPU
-车牌，车型检测
-./security_barrier_camera_demo -i cam -m /opt/intel/computer_vision_sdk/deployment_tools/intel_models/vehicle-license-plate-detection-barrier-0106/FP32/vehicle-license-plate-detection-barrier-0106.xml -m_va /opt/intel/computer_vision_sdk/deployment_tools/intel_models/vehicle-attributes-recognition-barrier-0039/FP32/vehicle-attributes-recognition-barrier-0039.xml -m_lpr /opt/intel/computer_vision_sdk/deployment_tools/intel_models/license-plate-recognition-barrier-0001/FP32/license-plate-recognition-barrier-0001.xml -d CPU
 人脸识别
 ./interactive_face_detection_demo -i cam -m /opt/intel/computer_vision_sdk/deployment_tools/intel_models/face-detection-adas-0001/FP32/face-detection-adas-0001.xml -m_ag /opt/intel/computer_vision_sdk/deployment_tools/intel_models/age-gender-recognition-retail-0013/FP32/age-gender-recognition-retail-0013.xml -m_hp /opt/intel/computer_vision_sdk/deployment_tools/intel_models/head-pose-estimation-adas-0001/FP32/head-pose-estimation-adas-0001.xml -m_em /opt/intel/computer_vision_sdk/deployment_tools/intel_models/emotions-recognition-retail-0003/FP32/emotions-recognition-retail-0003.xml -m_lm /opt/intel/computer_vision_sdk/deployment_tools/intel_models/facial-landmarks-35-adas-0001/FP32/facial-landmarks-35-adas-0001.xml -d CPU
-行人追踪
-./pedestrian_tracker_demo -i /home/xs/Movidius/ncs_objection/test/bus_station_6094_960x540.mp4 -m_det /opt/intel/computer_vision_sdk/deployment_tools/intel_models/person-detection-retail-0013/FP32/person-detection-retail-0013.xml -m_reid /opt/intel/computer_vision_sdk/deployment_tools/intel_models/person-reidentification-retail-0031/FP32/person-reidentification-retail-0031.xml -d_det CPU
-人员检测
-./crossroad_camera_demo -i /home/xs/Movidius/ncs_objection/test/bus_station_6094_960x540.mp4 -m /opt/intel/computer_vision_sdk/deployment_tools/intel_models/person-vehicle-bike-detection-crossroad-0078/FP32/person-vehicle-bike-detection-crossroad-0078.xml -m_pa /opt/intel/computer_vision_sdk/deployment_tools/intel_models/person-attributes-recognition-crossroad-0200/FP32/person-attributes-recognition-crossroad-0200.xml -m_reid /opt/intel/computer_vision_sdk/deployment_tools/intel_models/person-reidentification-retail-0079/FP32/person-reidentification-retail-0079.xml -d CPU
+
+
 

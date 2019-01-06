@@ -1,4 +1,4 @@
-//环境搭建ubuntu16.04+openVINO(R4)（自己根据之前的项目改写的，依赖还没统计，如果前面例子跑通，这个就能运行）
+//环境搭建ubuntu16.04+openVINO(R4)（
 //先生成模型，默认下载官网权重转，实际项目可以使用darknet训练自己的权重
 git clone https://github.com/17702513221/tensorflow_tools.git
 cd tensorflow-yolo-v3

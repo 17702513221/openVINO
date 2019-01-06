@@ -1,8 +1,8 @@
 //环境搭建ubuntu16.04+openVINO(R5)
-cd parking-lot-counter-cpp
+cd parking_lot_counter_cpp
 ./build.sh
 //下载测试视频
-cd parking-lot-counter-cpp
+cd parking_lot_counter_cpp
 wget https://github.com/intel-iot-devkit/sample-videos/raw/master/car-detection.mp4
 ./start.sh
 //使用摄像头，MQTT

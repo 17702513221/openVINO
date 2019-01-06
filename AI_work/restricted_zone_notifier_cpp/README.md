@@ -8,6 +8,8 @@ cd restricted-zone-notifier-cpp
 wget https://github.com/intel-iot-devkit/sample-videos/raw/master/worker-zone-detection.mp4
 cd build
 ./monitor -m=/opt/intel/computer_vision_sdk/deployment_tools/intel_models/pedestrian-detection-adas-0002/FP32/pedestrian-detection-adas-0002.bin -c=/opt/intel/computer_vision_sdk/deployment_tools/intel_models/pedestrian-detection-adas-0002/FP32/pedestrian-detection-adas-0002.xml -i=../worker-zone-detection.mp4
+//默认使用
+./start.sh
 //使用摄像头，MQTT
 export MQTT_SERVER=localhost:1883
 export MQTT_CLIENT_ID=cvservice

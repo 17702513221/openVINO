@@ -1,3 +1,14 @@
-面部识别，人体检测，专注力检测,yolov3识别，服务器搭建，ffmpeg
-搭建环境：ubuntu16.04+OpenVINO(R4)+USB摄像头
+crossroad_camera_demo_cpp:人物风格检测
+face_access_control_cpp:面部识别
+ffmpeg:视频流传输（默认VGA格式USB摄像头）
+license_plate_recognition_cpp:车牌识别（无需openVINO）
+machine_operator_monitor_cpp:专注力检测
+mqtt_py:python版mqtt
+parking_lot_counter_cpp:车辆进出统计
+pedestrian_tracker_cpp:人员查找，视频分割
+restricted_zone_notifier_cpp:人体检测
+security_barrier_camera_cpp:车牌，车型识别
+webservice:服务器搭建
+yolov3_cpp:yolov3识别
+搭建环境：ubuntu16.04+OpenVINO(R5)+USB摄像头
 参考说明：https://blog.csdn.net/oZhiZhuXia12/article/details/84870363

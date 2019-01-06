@@ -1,11 +1,13 @@
 //环境搭建ubuntu16.04+openVINO(R4)
-cd machine-operator-monitor-cpp
+cd machine_operator_monitor_cpp
 ./build.sh
 //下载测试视频
-cd restricted-zone-notifier-cpp
+cd restricted_zone_notifier_cpp
 wget https://github.com/intel-iot-devkit/sample-videos/raw/master/head-pose-face-detection-female.mp4
 cd build
 ./monitor -m=/opt/intel/computer_vision_sdk/deployment_tools/intel_models/face-detection-adas-0001/FP32/face-detection-adas-0001.bin -c=/opt/intel/computer_vision_sdk/deployment_tools/intel_models/face-detection-adas-0001/FP32/face-detection-adas-0001.xml -sm=/opt/intel/computer_vision_sdk/deployment_tools/intel_models/emotions-recognition-retail-0003/FP32/emotions-recognition-retail-0003.bin -sc=/opt/intel/computer_vision_sdk/deployment_tools/intel_models/emotions-recognition-retail-0003/FP32/emotions-recognition-retail-0003.xml -pm=/opt/intel/computer_vision_sdk/deployment_tools/intel_models/head-pose-estimation-adas-0001/FP32/head-pose-estimation-adas-0001.bin -pc=/opt/intel/computer_vision_sdk/deployment_tools/intel_models/head-pose-estimation-adas-0001/FP32/head-pose-estimation-adas-0001.xml -i=../head-pose-face-detection-female.mp4
+//默认使用
+./start.sh
 //使用摄像头，MQTT
 export MQTT_SERVER=localhost:1883
 export MQTT_CLIENT_ID=cvservice
